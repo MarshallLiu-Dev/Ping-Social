@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
+
 export default function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -9,7 +10,7 @@ export default function LoginPage() {
     const { setUserInfo } = useContext(UserContext);
     async function login(ev) {
         ev.preventDefault();
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('http://localhost:5000/login', {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: { 'Content-Type': 'application/json' },
@@ -21,7 +22,7 @@ export default function LoginPage() {
                 setRedirect(true);
             });
         } else {
-            alert('wrong credentials');
+            alert('Falha ao realizar o Login');
         }
     }
 
@@ -32,14 +33,14 @@ export default function LoginPage() {
         <form className="login" onSubmit={login}>
             <h1>Login</h1>
             <input type="text"
-                placeholder="username"
+                placeholder="Nome de Usuario"
                 value={username}
                 onChange={ev => setUsername(ev.target.value)} />
             <input type="password"
-                placeholder="password"
+                placeholder="Senha"
                 value={password}
                 onChange={ev => setPassword(ev.target.value)} />
-            <button>Login</button>
+            <button>Entrar</button>
         </form>
     );
 }
