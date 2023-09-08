@@ -1,8 +1,9 @@
-import ReactQuill from "react-quill";
+// import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../Editor";
+import '.././App.css';
 
 export default function CreatePost() {
   const [title,setTitle] = useState('');
@@ -31,19 +32,42 @@ export default function CreatePost() {
     return <Navigate to={'/'} />
   }
   return (
-    <form onSubmit={createNewPost}>
-      <input type="title"
-             placeholder={'Title'}
-             value={title}
-             onChange={ev => setTitle(ev.target.value)} />
-      <input type="summary"
-             placeholder={'Summary'}
-             value={summary}
-             onChange={ev => setSummary(ev.target.value)} />
-      <input type="file"
-             onChange={ev => setFiles(ev.target.files)} />
+
+    <form onSubmit={createNewPost} className="form login">
+      <input
+        type="title"
+        placeholder={'Titulo'}
+        value={title}
+        onChange={(ev) => setTitle(ev.target.value)}
+      />
+      <input
+        type="summary"
+        placeholder={'ping'}
+        value={summary}
+        onChange={(ev) => setSummary(ev.target.value)}
+      />
+      <input
+        type="file"
+        onChange={(ev) => setFiles(ev.target.files)}
+      />
       <Editor value={content} onChange={setContent} />
-      <button style={{marginTop:'5px'}}>Criar Ping</button>
+      <button>Criar Ping</button>
     </form>
+
   );
 }
+
+// <form onSubmit={createNewPost}>
+//   <input type="title"
+//          placeholder={'Titulo'}
+//          value={title}
+//          onChange={ev => setTitle(ev.target.value)} />
+//   <input type="summary"
+//          placeholder={'ping'}
+//          value={summary}
+//          onChange={ev => setSummary(ev.target.value)} />
+//   <input type="file"
+//          onChange={ev => setFiles(ev.target.files)} />
+//   <Editor value={content} onChange={setContent} />
+//   <button style={{marginTop:'5px'}}>Criar ping</button>
+// </form>
