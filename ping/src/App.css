@@ -474,7 +474,7 @@ form.login a:hover {
 
 
 /* app.css ou outro arquivo CSS relevante */
- import "react-giphy-picker/dist/bundle.css";
+ /* @import "react-giphy-picker/dist/bundle.css"; */
  @import "~font-awesome/css/font-awesome.css";
 
  * {
