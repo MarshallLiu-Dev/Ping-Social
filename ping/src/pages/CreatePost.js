@@ -56,18 +56,3 @@ export default function CreatePost() {
 
   );
 }
-
-// <form onSubmit={createNewPost}>
-//   <input type="title"
-//          placeholder={'Titulo'}
-//          value={title}
-//          onChange={ev => setTitle(ev.target.value)} />
-//   <input type="summary"
-//          placeholder={'ping'}
-//          value={summary}
-//          onChange={ev => setSummary(ev.target.value)} />
-//   <input type="file"
-//          onChange={ev => setFiles(ev.target.files)} />
-//   <Editor value={content} onChange={setContent} />
-//   <button style={{marginTop:'5px'}}>Criar ping</button>
-// </form>

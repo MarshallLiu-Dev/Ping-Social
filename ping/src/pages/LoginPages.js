@@ -1,12 +1,6 @@
-// import { useContext, useState } from "react";
-// import { Navigate } from "react-router-dom";
-// import { UserContext } from "../UserContext";
 import { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { UserContext } from "../UserContext"; // Importe UserContextProvider, não UserContext
-
-// Resto do seu código...
-
+import { UserContext } from "../UserContext"; 
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');

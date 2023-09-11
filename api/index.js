@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
@@ -31,7 +32,7 @@ mongoose.connect(process.env.MONGODB_URI, {
         console.error("MongoDB connection error:", err);
     });
 
-const secret = process.env.SECRET_KEY;
+// const secret = process.env.SECRET_KEY;
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -39,7 +40,7 @@ const upload = multer({ storage: storage });
 // Rotas do  código inicio
 
 app.post("/register", upload.single("profileImage"), async (req, res) => {
-    const { username, password, name, email, birthday, phoneNumber } = req.body;
+    const { username, password, name, email, birthday, phoneNumber, age } = req.body;
     const profileImage = req.file ? req.file.buffer : null;
 
     try {
@@ -62,6 +63,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
             phoneNumber,
             name,
             profileImage,
+            age
         });
 
         await newUser.save();
@@ -160,26 +162,53 @@ app.get('/post', async (req, res) => {
     );
 });
 
+
+
+// app.get('/perfil', async (req, res) => {
+//     try {
+
+//         const { token } = req.cookies;
+
+
+//         const decodedToken = jwt.verify(token, secret);
+
+
+//         const user = await User.findById(decodedToken.id);
+
+//         if (!user) {
+//             return res.status(404).json({ error: 'Usuário não encontrado' });
+//         }
+
+
+//         res.json({
+//             username: user.username,
+//             email: user.email,
+//             name: user.name,
+//             age: user.age,
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Erro ao buscar o perfil do usuário' });
+//     }
+// });
 app.get('/perfil', async (req, res) => {
     try {
-
         const { token } = req.cookies;
-
-
         const decodedToken = jwt.verify(token, secret);
-
-
         const user = await User.findById(decodedToken.id);
 
         if (!user) {
             return res.status(404).json({ error: 'Usuário não encontrado' });
         }
 
+        const userPosts = await Post.find({ author: user._id });
 
         res.json({
             username: user.username,
             email: user.email,
             name: user.name,
+            age: user.age,
+            posts: userPosts, 
         });
     } catch (error) {
         console.error(error);
@@ -209,6 +238,43 @@ app.put('/perfil', async (req, res) => {
         res.status(500).json({ message: 'Erro ao atualizar o nome de perfil do usuário' });
     }
 });
+
+app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+    let newPath = null;
+    if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
+    }
+
+    const { token } = req.cookies;
+    jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+        const { id, title, summary, content } = req.body;
+        const postDoc = await Post.findById(id);
+        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+        if (!isAuthor) {
+            return res.status(400).json('voce não é o autor');
+        }
+        await postDoc.update({
+            title,
+            summary,
+            content,
+            cover: newPath ? newPath : postDoc.cover,
+        });
+
+        res.json(postDoc);
+    });
+
+});
+
+app.get('/post/:id', async (req, res) => {
+    const { id } = req.params;
+    const postDoc = await Post.findById(id).populate('author', ['username']);
+    res.json(postDoc);
+})
 
 // Rotas do código fim
 

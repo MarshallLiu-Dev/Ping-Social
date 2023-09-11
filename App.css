@@ -1,0 +1,369 @@
+@import "~font-awesome/css/font-awesome.css";
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  cursor: pointer;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+img {
+  margin-left: 55px;
+  max-width: 60%;
+}
+
+.highlight {
+  color: #1da1f2;
+  color: #e9959b;
+}
+
+a {
+  color: #1da1f2;
+  color: #e9959b;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1da1f2;
+  color: #e9959b;
+  text-decoration: none;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background-color: #e4e9f7;
+  color: #333;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+header a.logo {
+  margin-left: 80px;
+  font-weight: bold;
+  font-size: 2.2rem;
+}
+
+header a {
+  text-decoration: none;
+  color: inherit;
+  margin-right: 20px;
+}
+
+header {
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+header a svg {
+  margin-right: 5px;
+}
+
+
+
+.profile-image img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+
+button {
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+button:focus {
+  outline: none;
+}
+
+
+button:hover {
+  text-decoration: underline;
+}
+
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+
+.username {
+  font-weight: bold;
+}
+
+
+
+.facebook-feed-post {
+  border: 1px solid #e4e4e4;
+  margin: 16px auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+}
+
+
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #385898;
+}
+
+.author-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.post-time {
+  font-size: 14px;
+  color: #777;
+}
+
+.post-actions {
+  margin-left: auto;
+  display: flex;
+}
+
+.like-button,
+.comment-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 16px;
+}
+
+.post-content {
+  padding: 16px;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+.post-title {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+.post-summary {
+  font-size: 16px;
+  margin: 0;
+}
+
+
+form.login,
+form.register {
+  border-radius: 10px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  z-index: 999;
+  text-align: center;
+  padding: 20px;
+  width: 300px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(29, 29, 29, 0.2);
+}
+
+
+form.login input,
+form.register input {
+  display: block;
+  margin: 10px auto;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+form.login button,
+form.register button {
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  background-color: #007AFF;
+  background-color: #e9959b;
+  border: 0;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 0;
+}
+
+form.login button:hover,
+form.register button:hover {
+  background-color: #0056b3;
+  background-color: #e9959b;
+
+}
+
+
+form.login h1,
+form.register h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+form.login a {
+  color: #007AFF;
+  color: #e9959b;
+  text-decoration: none;
+}
+
+form.login a:hover {
+  text-decoration: underline;
+}
+
+.ql-editor {
+  min-height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 16px;
+}
+/* background-color: #e9959b; */
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 200px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.about-container h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.about-container p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+
+.username {
+  margin-right: 10px;
+  margin-bottom: 0;
+  font-weight: bold;
+  font-style: italic;
+  color: #e9959b;
+  font-size: 1rem;
+}
+
+
+.footer-container {
+  
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 10px 0;
+  
+}
+
+
+.footer-container h3 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.footer-container p {
+  font-size: .9rem;
+  margin: 5px 0;
+}
+
+
+@media screen and (min-width: 700px) {
+  div.post {
+    grid-template-columns: .9fr 1.1fr;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+
+
+  header a.logo {
+    font-size: 1.8rem;
+    margin-left: 20px;
+  }
+
+
+  header nav {
+    margin: 0 20px;
+  }
+
+
+  form.login,
+  form.register {
+    width: 90%;
+    max-width: 350px;
+    margin: 50px auto 0;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+
+
+  header a.logo {
+    font-size: 1.5rem;
+  }
+
+
+  form.login,
+  form.register {
+    width: 90%;
+    max-width: 300px;
+    margin: 40px auto 0;
+    padding: 40px 20px;
+  }
+}
