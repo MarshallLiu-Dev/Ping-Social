@@ -11,7 +11,7 @@
 //     );
 // }
 
-// UserContext.js
+// // UserContext.js funcional 
 import React, { createContext, useState, useContext } from "react";
 
 export const UserContext = createContext();
@@ -29,3 +29,25 @@ export function UserContextProvider({ children }) {
 export function useUserContext() {
     return useContext(UserContext);
 }
+
+
+
+// UserContext.js
+// ../UserContext.js
+// import React, { createContext, useContext, useState } from 'react';
+
+// const UserContext = createContext();
+
+// export function useUserContext() {
+//     return useContext(UserContext);
+// }
+
+// export function UserContextProvider({ children }) {
+//     const [userInfo, setUserInfo] = useState(null);
+
+//     return (
+//         <UserContext.Provider value={{ userInfo, setUserInfo }}>
+//             {children}
+//         </UserContext.Provider>
+//     );
+// }

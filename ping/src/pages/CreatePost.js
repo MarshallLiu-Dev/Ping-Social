@@ -34,23 +34,23 @@ export default function CreatePost() {
   return (
 
     <form onSubmit={createNewPost} className="form login">
-      <input
+      {/* <input
         type="title"
         placeholder={'Titulo'}
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
-      />
+      /> */}
       <input
         type="summary"
-        placeholder={'ping'}
+        placeholder={'O que está acontecendo?'}
         value={summary}
         onChange={(ev) => setSummary(ev.target.value)}
-      />
+      />      
+      {/* <Editor value={content} onChange={setContent} /> */}
       <input
         type="file"
         onChange={(ev) => setFiles(ev.target.files)}
       />
-      <Editor value={content} onChange={setContent} />
       <button>Criar Ping</button>
     </form>
 
