@@ -11,7 +11,7 @@ export default function Header() {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch("http://localhost:5000/profile", {
+                const response = await fetch("https://ping-server-api.vercel.app/profile", {
                     credentials: "include",
                 });
                 if (response.ok) {
@@ -29,7 +29,7 @@ export default function Header() {
     }, [setUserInfo]);
 
     function logout() {
-        fetch("http://localhost:5000/logout", {
+        fetch("https://ping-server-api.vercel.app/logout", {
             credentials: "include",
             method: "POST",
         })

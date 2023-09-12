@@ -17,7 +17,7 @@ const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 // eslint-disable-next-line no-unused-vars
 const path = require('path');
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "https://ping-server-api.vercel.app/" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('uploads', express.static(__dirname + 'uploads'));

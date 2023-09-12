@@ -46,7 +46,7 @@ export default function Perfil() {
     const updateUsername = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:5000/perfil", {
+            const response = await fetch("https://ping-server-api.vercel.app/perfil", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
