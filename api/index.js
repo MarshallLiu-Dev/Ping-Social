@@ -47,6 +47,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 
 // Rotas do  código inicio
+app.get('/', (req, res) => {
+    res.send('Hello World');
+});
+
 
 app.post('/register', upload.single('file'), async (req, res) => {
     const { username, password, name, email, phone, age } = req.body;
