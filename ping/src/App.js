@@ -8,8 +8,6 @@ import LoginPage from './pages/LoginPages';
 import RegisterPage from './pages/RegisterPage';
 import CreatePost from './pages/CreatePost';
 import Perfil from './pages/perfil';
-import EditPost from './pages/EditPost';
-import PostPage from './pages/PostPage'
 import ApagarPerfil from './pages/ApagarConta';
 import { Routes, Route } from "react-router-dom";
 import { UserContextProvider } from "./UserContext"; // Importe o UserContextProvider
@@ -25,8 +23,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/delete-profile" element={<ApagarPerfil />} />
-            <Route path="/edit/:id" element={<EditPost />} />
-            <Route path="/post/:id" element={<PostPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/create" element={<CreatePost />} />
           </Route>   
