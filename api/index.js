@@ -30,7 +30,7 @@ if (!fs.existsSync(directory)) {
 }
 
 
-const storage = multer.memoryStorage(); // Use memory storage for file uploads
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 console.log(process.env.MONGODB_URI);
@@ -125,7 +125,7 @@ app.post('/post', upload.single('file'), async (req, res) => {
         const ext = parts[parts.length - 1];
 
         const filename = `${Date.now()}.${ext}`;
-        const filePath = path.join(__dirname, 'uploads', filename); // Use path.join to ensure the correct path separator
+        const filePath = path.join(__dirname, 'uploads', filename);
 
         fs.writeFileSync(filePath, buffer);
         coverPath = `uploads/${filename}`;
@@ -147,7 +147,7 @@ app.post('/post', upload.single('file'), async (req, res) => {
                 title,
                 summary,
                 content,
-                cover: coverPath, // This is the relative file path to the uploaded file
+                cover: coverPath, 
                 author: info.id,
                 name: info.name,
             });
