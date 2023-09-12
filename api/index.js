@@ -17,7 +17,9 @@ const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 // eslint-disable-next-line no-unused-vars
 const path = require('path');
 
-app.use(cors({ credentials: true, origin: "" }));
+// app.use(cors({ credentials: true, origin: '*' }));
+// app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('uploads', express.static(__dirname + 'uploads'));
@@ -28,7 +30,6 @@ const directory = path.join(__dirname, 'uploads');
 if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
 }
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -47,9 +48,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 
 // Rotas do  código inicio
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+// app.get('/', (req, res) => {
+//     res.send('Hello World');
+// });
 
 
 app.post('/register', upload.single('file'), async (req, res) => {
@@ -167,7 +168,7 @@ app.post('/post', upload.single('file'), async (req, res) => {
 
 
 
-app.get('/post', async (req, res) => {
+app.get('/', async (req, res) => {
     res.json(
         await Post.find()
             .populate('author', ['username', 'name'])
