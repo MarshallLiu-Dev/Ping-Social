@@ -1,5 +1,6 @@
 import About from './About';
 import './App.css';
+// eslint-disable-next-line no-unused-vars
 import Footer from './Footer';
 import Layout from './Layout';
 import IndexPage from './pages/indexPage';
@@ -28,10 +29,9 @@ function App() {
             <Route path="/post/:id" element={<PostPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/create" element={<CreatePost />} />
-          </Route>
-          
+          </Route>   
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </>
     </UserContextProvider>
   );

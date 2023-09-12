@@ -97,7 +97,7 @@ export default function Perfil() {
     const renderForm = () => {
         if (isEditing) {
             return (
-                <form onSubmit={updateUsername}>
+                <form className="form-login" onSubmit={updateUsername}>
                     <label htmlFor="username">Nome de Usuário:</label>
                     <input
                         type="text"

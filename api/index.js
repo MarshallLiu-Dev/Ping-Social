@@ -14,13 +14,26 @@ const uploadMiddleware = multer({ dest: 'uploads/' });
 const fs = require('fs');
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
+// eslint-disable-next-line no-unused-vars
+const path = require('path');
+
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use('uploads', express.static(__dirname + 'uploads'));
 
 
-// console.log(process.env.MONGODB_URI);
+const directory = path.join(__dirname, 'uploads');
+
+if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+}
+
+
+const storage = multer.memoryStorage(); // Use memory storage for file uploads
+const upload = multer({ storage: storage });
+
+console.log(process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -32,58 +45,51 @@ mongoose.connect(process.env.MONGODB_URI, {
         console.error("MongoDB connection error:", err);
     });
 
-// const secret = process.env.SECRET_KEY;
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 // Rotas do  código inicio
 
-app.post("/register", upload.single("profileImage"), async (req, res) => {
-    const { username, password, name, email, birthday, phoneNumber, age } = req.body;
-    const profileImage = req.file ? req.file.buffer : null;
+app.post('/register', upload.single('file'), async (req, res) => {
+    const { username, password, name, email, phone, age } = req.body;
 
     try {
-
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).json({ message: "Nome de usuário já em uso." });
-        }
-
-
+        
         const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
-
-        const newUser = new User({
+        
+        const fileData = req.file; 
+        const userDoc = await User.create({
             username,
             password: hashedPassword,
-            birthday,
-            email,
-            phoneNumber,
             name,
-            profileImage,
-            age
+            email,
+            phone,
+            age,
+            file: fileData,
         });
 
-        await newUser.save();
-
-        res.status(200).json({ message: "Cadastro Realizado com Sucesso" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erro ao realizar o cadastro" });
+        res.status(200).json(userDoc);
+    } catch (e) {
+        console.error(e);
+        res.status(400).json({ error: 'Erro no cadastro' });
     }
 });
+
+
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const userDoc = await User.findOne({ username });
+
+    if (!userDoc) {
+        return res.status(400).json("Falha ao realizar o Login");
+    }
+
     const passOk = bcrypt.compareSync(password, userDoc.password);
 
     if (passOk) {
         jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
             if (err) throw err;
-
 
             const responseJSON = {
                 id: userDoc._id,
@@ -106,22 +112,25 @@ app.get('/profile', (req, res) => {
     });
 });
 
-
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json('ok');
 });
 
-app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+app.post('/post', upload.single('file'), async (req, res) => {
     let coverPath = null;
 
     if (req.file) {
-        const { originalname, path } = req.file;
+        const { originalname, buffer } = req.file;
         const parts = originalname.split('.');
         const ext = parts[parts.length - 1];
-        const newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
 
-        coverPath = newPath;
+        const filename = `${Date.now()}.${ext}`;
+        const filePath = path.join(__dirname, 'uploads', filename); // Use path.join to ensure the correct path separator
+
+        fs.writeFileSync(filePath, buffer);
+        coverPath = `uploads/${filename}`;
+        console.log('File path:', filePath);
+
     }
 
     const { token } = req.cookies;
@@ -138,7 +147,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
                 title,
                 summary,
                 content,
-                cover: coverPath,
+                cover: coverPath, // This is the relative file path to the uploaded file
                 author: info.id,
                 name: info.name,
             });
@@ -153,6 +162,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
 
 
 
+
 app.get('/post', async (req, res) => {
     res.json(
         await Post.find()
@@ -162,35 +172,6 @@ app.get('/post', async (req, res) => {
     );
 });
 
-
-
-// app.get('/perfil', async (req, res) => {
-//     try {
-
-//         const { token } = req.cookies;
-
-
-//         const decodedToken = jwt.verify(token, secret);
-
-
-//         const user = await User.findById(decodedToken.id);
-
-//         if (!user) {
-//             return res.status(404).json({ error: 'Usuário não encontrado' });
-//         }
-
-
-//         res.json({
-//             username: user.username,
-//             email: user.email,
-//             name: user.name,
-//             age: user.age,
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Erro ao buscar o perfil do usuário' });
-//     }
-// });
 app.get('/perfil', async (req, res) => {
     try {
         const { token } = req.cookies;
@@ -215,7 +196,6 @@ app.get('/perfil', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar o perfil do usuário' });
     }
 });
-
 
 app.put('/perfil', async (req, res) => {
     try {
