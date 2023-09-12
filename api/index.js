@@ -12,28 +12,18 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' });
 const fs = require('fs');
+const path = require('path');
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
-// eslint-disable-next-line no-unused-vars
-const path = require('path');
-
-// app.use(cors({ credentials: true, origin: '*' }));
-// app.use(cors());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(cookieParser());
-app.use('uploads', express.static(__dirname + 'uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+const storage = multer.memoryStorage(); // Usar memoryStorage para armazenar a imagem em memória
+const upload = multer({ storage });
 
-const directory = path.join(__dirname, 'uploads');
-
-if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
-}
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
+// Conexão com o MongoDB
 console.log(process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -46,23 +36,47 @@ mongoose.connect(process.env.MONGODB_URI, {
         console.error("MongoDB connection error:", err);
     });
 
+// Rota para registro de usuário
+//Funcional
+// app.post('/register', uploadMiddleware.single('profileImage'), async (req, res) => {
+//     const { username, password, name, email, phone, age, bio } = req.body;
 
-// Rotas do  código inicio
-// app.get('/', (req, res) => {
-//     res.send('Hello World');
+//     try {
+//         const saltRounds = 10;
+//         const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+//         // const fileData = req.file;
+//         const profileImage = req.file ? req.file.buffer : undefined;
+//         const userDoc = await User.create({
+//             username,
+//             password: hashedPassword,
+//             name,
+//             email,
+//             phone,
+//             age,
+//             bio,
+//             profileImage,
+//             // file: fileData,
+//         });
+
+//         res.status(200).json(userDoc);
+//         console.log(userDoc)
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json({ error: 'Erro no cadastro' });
+//     }
 // });
 
-
-app.post('/register', upload.single('file'), async (req, res) => {
-    const { username, password, name, email, phone, age } = req.body;
+//test
+app.post('/register', uploadMiddleware.single('file'), async (req, res) => {
+    const { username, password, name, email, phone, age, bio } = req.body;
 
     try {
-        
         const saltRounds = 10;
         const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
-        
-        const fileData = req.file; 
+        const profileImage = req.file ? req.file.buffer : undefined;
+
         const userDoc = await User.create({
             username,
             password: hashedPassword,
@@ -70,10 +84,12 @@ app.post('/register', upload.single('file'), async (req, res) => {
             email,
             phone,
             age,
-            file: fileData,
+            bio,
+            profileImage,
         });
 
         res.status(200).json(userDoc);
+        console.log(userDoc);
     } catch (e) {
         console.error(e);
         res.status(400).json({ error: 'Erro no cadastro' });
@@ -82,6 +98,7 @@ app.post('/register', upload.single('file'), async (req, res) => {
 
 
 
+// Rota para login de usuário
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const userDoc = await User.findOne({ username });
@@ -109,6 +126,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Rota para perfil de usuário
 app.get('/profile', (req, res) => {
     const { token } = req.cookies;
     jwt.verify(token, secret, {}, (err, info) => {
@@ -117,11 +135,13 @@ app.get('/profile', (req, res) => {
     });
 });
 
+// Rota para logout de usuário
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json('ok');
 });
 
-app.post('/post', upload.single('file'), async (req, res) => {
+// Rota para criar um post
+app.post('/create-post', upload.single('file'), async (req, res) => {
     let coverPath = null;
 
     if (req.file) {
@@ -152,7 +172,7 @@ app.post('/post', upload.single('file'), async (req, res) => {
                 title,
                 summary,
                 content,
-                cover: coverPath, 
+                cover: coverPath,
                 author: info.id,
                 name: info.name,
             });
@@ -165,18 +185,22 @@ app.post('/post', upload.single('file'), async (req, res) => {
     });
 });
 
-
-
-
+// Rota para listar posts
 app.get('/', async (req, res) => {
-    res.json(
-        await Post.find()
+    try {
+        const posts = await Post.find()
             .populate('author', ['username', 'name'])
             .sort({ createdAt: -1 })
-            .limit(20)
-    );
+            .limit(20);
+
+        res.json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao buscar os posts' });
+    }
 });
 
+// Rota para buscar o perfil do usuário
 app.get('/perfil', async (req, res) => {
     try {
         const { token } = req.cookies;
@@ -194,7 +218,8 @@ app.get('/perfil', async (req, res) => {
             email: user.email,
             name: user.name,
             age: user.age,
-            posts: userPosts, 
+            bio: user.bio,
+            posts: userPosts,
         });
     } catch (error) {
         console.error(error);
@@ -202,7 +227,8 @@ app.get('/perfil', async (req, res) => {
     }
 });
 
-app.put('/perfil', async (req, res) => {
+// Rota para atualizar o perfil do usuário
+app.put('/profile', async (req, res) => {
     try {
         const userId = req.user.id;
         const { username } = req.body;
@@ -224,7 +250,8 @@ app.put('/perfil', async (req, res) => {
     }
 });
 
-app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+// Rota para atualizar um post
+app.put('/post/:id', uploadMiddleware.single('file'), async (req, res) => {
     let newPath = null;
     if (req.file) {
         const { originalname, path } = req.file;
@@ -241,7 +268,7 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
         const postDoc = await Post.findById(id);
         const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
         if (!isAuthor) {
-            return res.status(400).json('voce não é o autor');
+            return res.status(400).json('Você não é o autor');
         }
         await postDoc.update({
             title,
@@ -252,18 +279,16 @@ app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
 
         res.json(postDoc);
     });
-
 });
 
+// Rota para obter um post por ID
 app.get('/post/:id', async (req, res) => {
     const { id } = req.params;
     const postDoc = await Post.findById(id).populate('author', ['username']);
     res.json(postDoc);
-})
+});
 
-// Rotas do código fim
-
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

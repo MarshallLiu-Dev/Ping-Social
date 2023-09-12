@@ -8,8 +8,10 @@ const UserSchema = new Schema({
     email: { type: String, required: true, match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g },
     name: { type: String, required: true },
     age: { type: Number, required: false },
-    profileImage: { type: Buffer, required: false },
-    profileImageType: { type: String, required: false }, // Mime type of the image
+    bio: { type: String, required: false },
+    cover: { type: String, required: false },
+    // profileImage: { type: Buffer, required: false },
+    // profileImageType: { type: String, required: false }, 
 });
 
 const UserModel = model('User', UserSchema);
