@@ -6,10 +6,10 @@ export default function IndexPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:5000/post')
+        fetch('http://localhost:5000/')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                    throw new Error('erro ao acessar os posts');
                 }
                 return response.json();
             })

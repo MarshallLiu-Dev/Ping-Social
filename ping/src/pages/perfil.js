@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import Post from "../Post";
+import imagemPadrao from '../images/Unicornio.png';
 
-export default function Perfil() {
+export default function Perfil(author,) {
     const navigate = useNavigate();
     const { userInfo, setUserInfo } = useUserContext();
     const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function Perfil() {
     const updateUsername = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:5000/perfil", {
+            const response = await fetch("https://ping-server-api.vercel.app/perfil", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +85,7 @@ export default function Perfil() {
         if (userInfo.posts && userInfo.posts.length > 0) {
             return (
                 <div className="user-posts">
-                    <h2>Posts do Usuário</h2>
+                    {/* <h2>Posts do Usuário</h2> */}
                     {userInfo.posts.map((post) => (
                         <Post key={post._id} {...post} />
                     ))}
@@ -145,21 +146,30 @@ export default function Perfil() {
 
     return (
         <div className="feed">
-            <h1>Perfil</h1>
+            <h1>{userInfo.name}</h1>
 
             <div className="post-feed">
-                <h2>Informações do Usuário</h2>
+                <h2>
+                    {author ? (
+                        <img src={'http://localhost:5000/' + author.Perfil} alt={author.name} className="author-image" />
+                    ) : (
+                        <img src={imagemPadrao} alt="Imagem Padrão" className="author-image" />
+                    )}
+                    </h2>
                 <p>
-                    <strong>Nome:</strong> {userInfo.name}
+                    <strong>{userInfo.name}</strong> 
                 </p>
                 <p>
-                    <strong>Email:</strong> {userInfo.email}
+                    @{userInfo.username}
                 </p>
                 <p>
-                    <strong>Username:</strong> {userInfo.username}
+                    <strong>{userInfo.email}</strong> 
                 </p>
                 <p>
                     <strong>Idade:</strong> {userInfo.age}
+                </p>
+                <p>
+                    <strong>{userInfo.bio}</strong> 
                 </p>
             </div>
 
