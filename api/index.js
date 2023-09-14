@@ -15,7 +15,15 @@ const fs = require('fs');
 const path = require('path');
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+
+app.use(
+    cors({
+        origin: ['https://jovial-maamoul-38ed7a.netlify.app','https://pingsocial.vercel.app'],
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true, // Permite enviar cookies (se você estiver usando autenticação)
+    })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -37,35 +45,6 @@ mongoose.connect(process.env.MONGODB_URI, {
     });
 
 // Rota para registro de usuário
-//Funcional
-// app.post('/register', uploadMiddleware.single('profileImage'), async (req, res) => {
-//     const { username, password, name, email, phone, age, bio } = req.body;
-
-//     try {
-//         const saltRounds = 10;
-//         const hashedPassword = bcrypt.hashSync(password, saltRounds);
-
-//         // const fileData = req.file;
-//         const profileImage = req.file ? req.file.buffer : undefined;
-//         const userDoc = await User.create({
-//             username,
-//             password: hashedPassword,
-//             name,
-//             email,
-//             phone,
-//             age,
-//             bio,
-//             profileImage,
-//             // file: fileData,
-//         });
-
-//         res.status(200).json(userDoc);
-//         console.log(userDoc)
-//     } catch (e) {
-//         console.error(e);
-//         res.status(400).json({ error: 'Erro no cadastro' });
-//     }
-// });
 
 //test
 app.post('/register', uploadMiddleware.single('file'), async (req, res) => {
@@ -96,8 +75,6 @@ app.post('/register', uploadMiddleware.single('file'), async (req, res) => {
     }
 });
 
-
-
 // Rota para login de usuário
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -127,13 +104,28 @@ app.post('/login', async (req, res) => {
 });
 
 // Rota para perfil de usuário
-app.get('/profile', (req, res) => {
+// app.get('/profile', (req, res) => {
+//     const { token } = req.cookies;
+//     jwt.verify(token, secret, {}, (err, info) => {
+//         if (err) throw err;
+//         res.json(info);
+//     });
+// });
+
+app.get("/profile", (req, res) => {
     const { token } = req.cookies;
+
+    if (!token) {
+        return res.status(401).json({ error: "Token not provided" });
+    }
     jwt.verify(token, secret, {}, (err, info) => {
-        if (err) throw err;
+        if (err) {
+            return res.status(401).json({ error: "Invalid token" });
+        }
         res.json(info);
     });
 });
+
 
 // Rota para logout de usuário
 app.post('/logout', (req, res) => {
@@ -251,35 +243,68 @@ app.put('/profile', async (req, res) => {
 });
 
 // Rota para atualizar um post
-app.put('/post/:id', uploadMiddleware.single('file'), async (req, res) => {
-    let newPath = null;
-    if (req.file) {
-        const { originalname, path } = req.file;
-        const parts = originalname.split('.');
-        const ext = parts[parts.length - 1];
-        newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
-    }
+// app.put('/post/:id', uploadMiddleware.single('file'), async (req, res) => {
+//     let newPath = null;
+//     if (req.file) {
+//         const { originalname, path } = req.file;
+//         const parts = originalname.split('.');
+//         const ext = parts[parts.length - 1];
+//         newPath = path + '.' + ext;
+//         fs.renameSync(path, newPath);
+//     }
 
-    const { token } = req.cookies;
-    jwt.verify(token, secret, {}, async (err, info) => {
-        if (err) throw err;
-        const { id, title, summary, content } = req.body;
-        const postDoc = await Post.findById(id);
-        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-        if (!isAuthor) {
-            return res.status(400).json('Você não é o autor');
+//     const { token } = req.cookies;
+//     jwt.verify(token, secret, {}, async (err, info) => {
+//         if (err) throw err;
+//         const { id, title, summary, content } = req.body;
+//         const postDoc = await Post.findById(id);
+//         const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+//         if (!isAuthor) {
+//             return res.status(400).json('Você não é o autor');
+//         }
+//         await postDoc.update({
+//             title,
+//             summary,
+//             content,
+//             cover: newPath ? newPath : postDoc.cover,
+//         });
+
+//         res.json(postDoc);
+//     });
+// });
+
+// Rota para a edição de postagens (HTTP PUT)
+app.get("/edit-post/:postId",  async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+        // Consulte o banco de dados para obter os detalhes da postagem com base no postId
+        const post = await Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ error: "Post not found" });
         }
-        await postDoc.update({
-            title,
-            summary,
-            content,
-            cover: newPath ? newPath : postDoc.cover,
-        });
 
-        res.json(postDoc);
-    });
+        // Verifique se o usuário autenticado é o autor da postagem
+        if (post.author.toString() !== req.user.id) {
+            return res.status(403).json({ error: "Unauthorized" });
+        }
+
+        // Atualize os campos da postagem com base nos dados recebidos na solicitação PUT
+        post.summary = req.body.summary;
+        // Atualize outros campos, se necessário
+
+        // Salve a postagem atualizada no banco de dados
+        await post.save();
+
+        // Envie a postagem atualizada como resposta
+        res.json(post);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error updating post" });
+    }
 });
+
 
 // Rota para obter um post por ID
 app.get('/post/:id', async (req, res) => {
@@ -292,3 +317,35 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+
+//Funcional
+// app.post('/register', uploadMiddleware.single('profileImage'), async (req, res) => {
+//     const { username, password, name, email, phone, age, bio } = req.body;
+
+//     try {
+//         const saltRounds = 10;
+//         const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+//         // const fileData = req.file;
+//         const profileImage = req.file ? req.file.buffer : undefined;
+//         const userDoc = await User.create({
+//             username,
+//             password: hashedPassword,
+//             name,
+//             email,
+//             phone,
+//             age,
+//             bio,
+//             profileImage,
+//             // file: fileData,
+//         });
+
+//         res.status(200).json(userDoc);
+//         console.log(userDoc)
+//     } catch (e) {
+//         console.error(e);
+//         res.status(400).json({ error: 'Erro no cadastro' });
+//     }
+// });

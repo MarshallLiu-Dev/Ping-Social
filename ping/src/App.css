@@ -10,6 +10,8 @@
 
  body {
    font-family: "Open Sans", sans-serif;
+   /* color: #b0bec5; */
+   border-radius: 25px;
  }
 
  img {
@@ -18,28 +20,32 @@
  }
 
  .highlight {
-   color: #1da1f2;
    color: #e9959b;
+   color: #4fc3f7;
  }
 
  a {
-   color: #1da1f2;
    color: #e9959b;
+   color: #4fc3f7;
    text-decoration: none;
  }
 
  a:hover {
-   color: #1da1f2;
    color: #e9959b;
+   color: #4fc3f7;
    text-decoration: none;
  }
 
  header {
    display: flex;
+   border-radius: 25px;
+   margin-left: 25px;
+   margin-right: 25px;
    align-items: center;
-   background-color: #e4e9f7;
-   color: #333;
+   /* background: linear-gradient(to top right, #607d8b, #455a64); */
+   background: linear-gradient(to top right, #607d8b, #0d91e5);
    padding: 10px;
+   color: #fafafa;
    justify-content: space-between;
  }
 
@@ -66,7 +72,7 @@
  }
 
 
- /* Estilo da imagem de perfil */
+
  .profile-image img {
    width: 50px;
    height: 50px;
@@ -74,11 +80,9 @@
    object-fit: cover;
  }
 
- /* Estilo do botão de sair */
+
  button {
    background-color: transparent;
-   /* background-color: #e9959b;
-   border-radius: 5px; */
    padding: 10px 0;
    border: none;
    color: #ffffff;
@@ -91,9 +95,9 @@
    outline: none;
  }
 
- /* Estilo para o hover do botão */
+
  button:hover {
-   text-decoration: underline;
+   text-decoration: none;
  }
 
 
@@ -110,16 +114,17 @@
  }
 
 
- /* Estilo base do post */
+
  .facebook-feed-post {
    border: 1px solid #e4e4e4;
    margin: 16px auto;
    background-color: #fff;
    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
    max-width: 600px;
+   border-radius: 16px;
  }
 
- /* Cabeçalho do post (autor e ações) */
+
  .post-header {
    display: flex;
    align-items: center;
@@ -130,7 +135,7 @@
    display: flex;
    align-items: center;
    text-decoration: none;
-   color: #385898;
+   color: #4fc3f7;
  }
 
  .author-image {
@@ -152,6 +157,7 @@
  }
 
  .post-time {
+   margin-top: 6px;
    font-size: 14px;
    color: #777;
  }
@@ -175,9 +181,11 @@
  }
 
  .post-image {
+   margin-top: 16px;
    width: 100%;
    height: auto;
    margin-bottom: 16px;
+   border-radius: 25px;
  }
 
  .post-title {
@@ -189,6 +197,7 @@
  .post-summary {
    font-size: 16px;
    margin: 0;
+   color: #263238;
  }
 
 .feed {
@@ -206,71 +215,110 @@
   margin-top: 20px;
 }
 
- form.login,
- form.register {
-   border-radius: 10px;
-   position: absolute;
-   top: 35%;
-   left: 50%;
-   z-index: 999;
-   text-align: center;
-   padding: 20px;
-   width: 300px;
-   transform: translate(-50%, -50%);
-   background: rgba(255, 255, 255, 0.9);
-   border: 1px solid #ccc;
-   box-shadow: 0 0 10px rgba(29, 29, 29, 0.2);
- }
+form.login,
+form.register {
+  max-width: 24rem;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  text-align: center;
+  padding: 20px;
+  width: 300px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(29, 29, 29, 0.2);
+}
 
+/* Estilos para os campos de entrada (Input) */
+form.login input,
+form.register input {
+  display: block;
+  margin: 10px auto;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
 
- form.login input,
- form.register input {
-   display: block;
-   margin: 10px auto;
-   width: 100%;
-   padding: 10px;
-   border: 1px solid #ccc;
-   border-radius: 5px;
-   background-color: #f9f9f9;
- }
+/* Estilos para os botões (Button) */
+form.login button,
+form.register button {
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  background-color: #007AFF;
+  border: 0;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 0;
+}
 
- form.login button,
- form.register button {
-   cursor: pointer;
-   width: 100%;
-   display: block;
-   background-color: #007AFF;
-   background-color: #e9959b;
-   border: 0;
-   color: #fff;
-   border-radius: 5px;
-   padding: 10px 0;
- }
+form.login button:hover,
+form.register button:hover {
+  background-color: #0056b3;
+  background-color: #e9959b;
+}
 
- form.login button:hover,
- form.register button:hover {
-   background-color: #0056b3;
-   background-color: #e9959b;
+/* Estilos para os cabeçalhos (h1) */
+form.login h1,
+form.register h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
- }
+/* Estilos para os links (a) */
+form.login a {
+  color: #e9959b;
+  text-decoration: none;
+}
 
+form.login a:hover {
+  text-decoration: underline;
+  color: #007AFF;
+}
 
- form.login h1,
- form.register h1 {
-   text-align: center;
-   margin-bottom: 20px;
- }
+/* Estilos para o componente PingBox */
+.Ping-box {
+  border: 1px solid #e4e4e4;
+  margin: 16px auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+}
 
+.Ping-box input {
+  text-align: center;
+  flex: 1;
+  padding: 16px;
+  font-size: 20px;
+  border: 1px solid #fff;
+  background-color: #fff;
+}
 
- form.login a {
-   color: #007AFF;
-   color: #e9959b;
-   text-decoration: none;
- }
+.Ping-box button {
+  margin-left: 11px;
+  margin-right: 11px;
+  background-color: #1da1f2;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
- form.login a:hover {
-   text-decoration: underline;
- }
+.Ping-box button:hover {
+  background-color: #0d91e5;
+}
+
 
  .ql-editor {
    min-height: 200px;
@@ -280,7 +328,6 @@
    font-size: 16px;
  }
 
- /* background-color: #e9959b; */
  .about-container {
    max-width: 800px;
    margin: 0 auto;
@@ -314,7 +361,7 @@
    margin-bottom: 0;
    font-weight: bold;
    font-style: italic;
-   color: #e9959b;
+   /* color: #e9959b; */
    font-size: 1rem;
  }
 

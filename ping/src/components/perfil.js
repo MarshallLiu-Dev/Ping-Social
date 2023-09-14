@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../UserContext";
 import { useNavigate } from "react-router-dom";
-import Post from "../Post";
+import Post from "../pages/Post";
 import imagemPadrao from '../images/Unicornio.png';
 
 export default function Perfil(author,) {

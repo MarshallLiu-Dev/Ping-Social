@@ -1,4 +1,6 @@
-import Post from "../Post";
+import Post from "../pages/Post";
+import PingBox from "./PingBox";
+import '../App.css';
 import { useEffect, useState } from "react";
 
 export default function IndexPage() {
@@ -23,6 +25,11 @@ export default function IndexPage() {
 
     return (
         <>
+
+        <>
+                <PingBox/>
+        
+        </>
             {error ? (
                 <p>Error: {error}</p>
             ) : (
@@ -32,6 +39,10 @@ export default function IndexPage() {
                     ))}
                 </>
             )}
+            <div className="footer-container">
+                <h3>Apresentando o Ping Social, Uma rede social para você</h3>
+                <p>Copyright &copy; 2023 Ping Social | TODOS OS DIREITOS RESERVADOS</p>
+            </div>
         </>
     );
 }
